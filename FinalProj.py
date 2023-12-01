@@ -30,12 +30,15 @@ screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption('Button Demo')
 
 
+# Game variables
+game_menu = True
+game_menu_start = False
 
 #load button images
-start = pygame.image.load('Perez_Emilio_FinalProject/image/start.png').convert_alpha()
-setup = pygame.image.load('Perez_Emilio_FinalProject/image/set_up.png').convert_alpha()
-instruction = pygame.image.load('Perez_Emilio_FinalProject/image/instructions.png').convert_alpha()
-filler = pygame.image.load('Perez_Emilio_FinalProject/image/filler.png').convert_alpha()
+start = pygame.image.load('image/start.png').convert_alpha()
+setup = pygame.image.load('image/set_up.png').convert_alpha()
+instruction = pygame.image.load('image/instructions.png').convert_alpha()
+filler = pygame.image.load('image/filler.png').convert_alpha()
 
 #create button instances
 start_button = button.Button(300, 50, start, 0.8)
@@ -49,11 +52,15 @@ while run:
 
 	screen.fill((202, 228, 241))
 # Prints if button is clicked
+if game_menu == True:
 	if start_button.draw(screen) == True:
-		print('START')
+		game_menu = False
+		game_menu_start = True
+
+	
+	if game_menu_start == True:
+		filler_screen.draw(screen)
 		
-	else:
-		pass
 		
 		
 	if setup_button.draw(screen):
