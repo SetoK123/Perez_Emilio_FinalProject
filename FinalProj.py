@@ -31,7 +31,7 @@ pygame.display.set_caption('Button Demo')
 
 
 # Game variables
-game_menu = True
+game_menu = 1
 game_menu_start = False
 
 #load button images
@@ -49,13 +49,18 @@ filler_screen = button.Button(300, 350, filler, 0.8)
 #game loop
 run = True
 while run:
+	
+	if game_menu >= 1:
+		break
 
 	screen.fill((202, 228, 241))
-# Prints if button is clicked
-if game_menu == True:
+	# Prints if button is clicked
+if game_menu == 1:
+	game_menu += 1
 	if start_button.draw(screen) == True:
 		game_menu = False
 		game_menu_start = True
+
 
 	
 	if game_menu_start == True:
@@ -71,13 +76,16 @@ if game_menu == True:
 		print('instructions')
 		
 
-	#event handler
+	# event handler
 	for event in pygame.event.get():
 		#quit game
 		if event.type == pygame.QUIT:
 			run = False
 
-	pygame.display.update()
+
+
+
+pygame.display.update()
 
 pygame.quit()
 
