@@ -9,7 +9,7 @@
 
 
 from Settings import *
-import pygame as pg 
+import pygame
 import sys 
 import os
 
@@ -30,8 +30,9 @@ screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption('Button Demo')
 
 
+
 # Game variables
-game_menu = 1
+game_menu = True
 game_menu_start = False
 
 #load button images
@@ -46,13 +47,23 @@ setup_button = button.Button(300, 200, setup, 0.8)
 instruction_button = button.Button(300, 350, instruction, 0.8)
 filler_screen = button.Button(300, 350, filler, 0.8)
 
+#define fonts
+font = pygame.font.SysFont("arialblack", 40)
+
+#define colours
+TEXT_COL = (255, 255, 255)
+
+# define drawtext
+def draw_text(text, font, text_col, x, y):
+  img = font.render(text, True, text_col)
+  screen.blit(img, (x, y))
+
+
 #game loop
 run = True
 while run:
+	draw_text("Press SPACE to pause", font, TEXT_COL, 160, 250)
 	
-	if game_menu >= 1:
-		break
-
 	screen.fill((202, 228, 241))
 	# Prints if button is clicked
 if game_menu == 1:
@@ -88,6 +99,7 @@ if game_menu == 1:
 pygame.display.update()
 
 pygame.quit()
+
 
 #     # updates the frames of the game 
 # pg.display.update() 
