@@ -60,7 +60,7 @@ def draw_text(text, font, text_col, x, y):
 court = pygame.image.load("image/Tcourt.png")
 ball = pygame.image.load("image/ball.png")
 
-# Creates Time
+
 change_timer = pygame.time.get_ticks()
 # 3 seconds
 change_interval = 3000 
@@ -70,12 +70,34 @@ set = [[200,0], [470,0], [800,0]]
 ball_set = set[randint(0, 2)]
 # spike = (ball_locations.randint)
 
+spike = (200,500)
+
+# spot = spike[randit]
+
 
 def testing():
     screen.blit(court,(0,0))
     
+    # screen.blit(ball, spike)
     
-    screen.blit(ball, ball_set)
+    if ball_set == [200,0]:
+       pass
+        # screen.blit(ball, spike)
+
+
+    if ball_set == [470,0]:
+        pass
+        # screen.blit(ball, spike)
+    
+    if ball_set == [800,0]:
+        pass
+        # screen.blit(ball, spike)
+
+    # screen.blit(ball, (x, y))
+
+    
+      
+
     
 
 
@@ -91,6 +113,7 @@ clock = pygame.time.Clock()
 while run:
 
   current_time = pygame.time.get_ticks()
+  elapsed_time = current_time - change_timer
 
   screen.fill((202, 228, 241))
 
@@ -113,6 +136,9 @@ while run:
       #calls the game
       testing()
       
+      
+      if elapsed_time == 1500:
+        screen.blit(ball, spike)
       # check if it's time to change the ball's position
       # if its been 3 seconds reset ball position
       if current_time - change_timer >= change_interval:
