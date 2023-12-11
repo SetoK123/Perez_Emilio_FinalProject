@@ -4,6 +4,10 @@
 # https://www.geeksforgeeks.org/how-to-create-buttons-in-a-game-using-pygame/
 # https://www.youtube.com/watch?v=G8MYGDf_9ho
 
+# Goals 12/9/23-
+# find out how to mkae ball disapear at 1500 then make new img that is downball that apears when ball 
+# disapears to create the illusion that the ball is moving.
+
 # Title Vball defense training 
 # Goals
 
@@ -59,6 +63,7 @@ def draw_text(text, font, text_col, x, y):
 # Def images
 court = pygame.image.load("image/Tcourt.png")
 ball = pygame.image.load("image/ball.png")
+ball2 = pygame.image.load("image/ball.png")
 
 
 change_timer = pygame.time.get_ticks()
@@ -67,33 +72,26 @@ change_interval = 3000
 
 # list of where the ball can go
 set = [[200,0], [470,0], [800,0]]
+# Picks one of the locations
 ball_set = set[randint(0, 2)]
+spikes = [[200,400], [470,700], [800,400]]
+downball = spikes[randint(0, 2)]
+
 # spike = (ball_locations.randint)
 
-spike = (200,500)
 
 # spot = spike[randit]
 
 
 def testing():
     screen.blit(court,(0,0))
+    screen.blit(ball, ball_set)
+    if change_timer >= 1500:
+      screen.blit(ball2, downball)
     
-    # screen.blit(ball, spike)
+    # screen.blit(ball, downball)
     
-    if ball_set == [200,0]:
-       pass
-        # screen.blit(ball, spike)
-
-
-    if ball_set == [470,0]:
-        pass
-        # screen.blit(ball, spike)
     
-    if ball_set == [800,0]:
-        pass
-        # screen.blit(ball, spike)
-
-    # screen.blit(ball, (x, y))
 
     
       
@@ -137,15 +135,20 @@ while run:
       testing()
       
       
-      if elapsed_time == 1500:
-        screen.blit(ball, spike)
+      # for change_interval in range (1400,1500):
+        
+      
       # check if it's time to change the ball's position
       # if its been 3 seconds reset ball position
       if current_time - change_timer >= change_interval:
             ball_set = set[randint(0, 2)]
+            downball = spikes[randint(0, 2)]
+            # screen.blit(ball2, downball)
             change_timer = current_time
+
       if back_button.draw(screen):
         menu_state = "main"
+      
 
 #check if the options menu is open
     if menu_state == "setup":
