@@ -32,11 +32,13 @@ pygame.display.set_caption("Main Menu")
 game_open = False
 menu_state = "main"
 
+
 #define fonts
 font = pygame.font.SysFont("arialblack", 40)
 
 #define colours
 TEXT_COL = (255, 255, 255)
+transparent = (0, 0, 0, 0)
 
 #load button images
 start_img = pygame.image.load("image/start.png").convert_alpha()
@@ -60,7 +62,7 @@ def draw_text(text, font, text_col, x, y):
   img = font.render(text, True, text_col)
   screen.blit(img, (x, y))
 
-# Def images
+#images
 court = pygame.image.load("image/Tcourt.png")
 ball = pygame.image.load("image/ball.png")
 ball2 = pygame.image.load("image/ball.png")
@@ -74,27 +76,39 @@ change_interval = 3000
 set = [[200,0], [470,0], [800,0]]
 # Picks one of the locations
 ball_set = set[randint(0, 2)]
-spikes = [[200,400], [470,700], [800,400]]
+spikes = [[200,400], [470,500], [800,400]]
 downball = spikes[randint(0, 2)]
 
-# spike = (ball_locations.randint)
-
-
-# spot = spike[randit]
+# Make ball2 apear and disapear 
+show_ball2 = False
 
 
 def testing():
+    global show_ball2
+
     screen.blit(court,(0,0))
     screen.blit(ball, ball_set)
-    if change_timer >= 1500:
-      screen.blit(ball2, downball)
+
+    if show_ball2 == True:
+          screen.blit(ball2, downball)
+
     
-    # screen.blit(ball, downball)
-    
+    if  change_timer < 1500:
+      print("works")
+      show_ball2 = True
+     
+      
+    if current_time - change_timer >= change_interval:
+        show_ball2 = False
+      
+      
+      
     
 
     
-      
+    # screen.blit(ball, downball)
+    
+  
 
     
 
@@ -139,12 +153,21 @@ while run:
         
       
       # check if it's time to change the ball's position
-      # if its been 3 seconds reset ball position
+      # if its been 3 seconds reset ball and ball2 position
       if current_time - change_timer >= change_interval:
             ball_set = set[randint(0, 2)]
             downball = spikes[randint(0, 2)]
             # screen.blit(ball2, downball)
             change_timer = current_time
+
+
+      if  change_timer < 1/current_time:
+        print("works")
+      show_ball2 = True
+     
+      
+      if current_time - change_timer >= change_interval:
+        show_ball2 = False
 
       if back_button.draw(screen):
         menu_state = "main"
