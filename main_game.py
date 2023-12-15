@@ -1,9 +1,12 @@
-
 # This file was created by: Emilio Perez
 
 # Sources of code:
 # https://www.geeksforgeeks.org/how-to-create-buttons-in-a-game-using-pygame/
 # https://www.youtube.com/watch?v=G8MYGDf_9ho
+
+# Goals 12/9/23-
+# find out how to mkae ball disapear at 1500 then make new img that is downball that apears when ball 
+# disapears to create the illusion that the ball is moving.
 
 # Title Vball defense training 
 # Goals
@@ -29,11 +32,13 @@ pygame.display.set_caption("Main Menu")
 game_open = False
 menu_state = "main"
 
+
 #define fonts
 font = pygame.font.SysFont("arialblack", 40)
 
 #define colours
 TEXT_COL = (255, 255, 255)
+transparent = (0, 0, 0, 0)
 
 #load button images
 start_img = pygame.image.load("image/start.png").convert_alpha()
@@ -53,41 +58,62 @@ inst_button = button.Button(380, 380, inst_img, 1)
 keys_button = button.Button(246, 325, keys_img, 1)
 back_button = button.Button(332, 450, back_img, 1)
 
+class Ball(pygame.sprite.Sprite):
+    def __init__(self, position):
+        super().__init__()
+        self.image = pygame.image.load("image/ball.png").convert_alpha()
+        self.rect = self.image.get_rect(center=position)
+
+
 def draw_text(text, font, text_col, x, y):
   img = font.render(text, True, text_col)
   screen.blit(img, (x, y))
 
-# Def images
+#images
 court = pygame.image.load("image/Tcourt.png")
-ball = pygame.image.load("image/ball.png")
+ball1 = Ball((0,0))
+ball2 = Ball((0,0))
 
+change_timer_ball1 = pygame.time.get_ticks()
+change_interval_ball1 = 1500
 
-change_timer = pygame.time.get_ticks()
-# 3 seconds
-change_interval = 3000 
+change_timer_ball2 = pygame.time.get_ticks()
+change_interval_ball2 = 700
+
 
 # list of where the ball can go
-set = [[200,0], [470,0], [800,0]]
-ball_set = set[randint(0, 2)]
-# spike = (ball_locations.randint)
+set = [[200, 0], [470, 0], [800, 0]]
+spike = [[200, 400], [470, 600], [800, 400]]
+# Picks one of the locations
+ball1_set = set[randint(0, 2)]
+downball = spike[randint(0, 2)]
 
-spike = (200,500)
-
-# spot = spike[randit]
+# Make ball2 apear and disapear 
+show_ball2 = False
 
 
 def testing():
-    screen.blit(court,(0,0))
-    
-    screen.blit(ball, ball_set)
-    
-   
-    
+    global show_ball2
+
+    screen.blit(court, (0, 0))
+    screen.blit(ball1.image, ball1_set)
+
+    if elapsed_time_ball1 >= 700:
+        if elapsed_time_ball2 < change_interval_ball2 / 2:
+            print("works for ball2")
+        show_ball2 = True
+
+    if show_ball2:
+        screen.blit(ball2.image, downball)
+ 
       
-
+      
+      
+      
     
 
 
+    
 
 
 
@@ -100,7 +126,8 @@ clock = pygame.time.Clock()
 while run:
 
   current_time = pygame.time.get_ticks()
- 
+  elapsed_time_ball1 = current_time - change_timer_ball1
+  elapsed_time_ball2 = current_time - change_timer_ball2
 
   screen.fill((202, 228, 241))
 
@@ -123,15 +150,28 @@ while run:
       #calls the game
       testing()
       
-      
+        
       
       # check if it's time to change the ball's position
-      # if its been 3 seconds reset ball position
-      if current_time - change_timer >= change_interval:
-            ball_set = set[randint(0, 2)]
-            change_timer = current_time
+      # if its been 3 seconds reset ball and ball2 position
+      if current_time - change_timer_ball1 >= change_interval_ball1:
+            ball1_set = set[randint(0, 2)]
+            downball = spike[randint(0, 2)]
+            change_timer_ball1 = current_time
+
+            # Reset show_ball2 to False when ball1 changes positions
+            show_ball2 = False
+
+            # check if it's time to change the ball2's position
+            if current_time - change_timer_ball2 >= change_interval_ball2:
+                change_timer_ball2 = current_time
+
+
+     
+
       if back_button.draw(screen):
         menu_state = "main"
+      
 
 #check if the options menu is open
     if menu_state == "setup":
@@ -152,6 +192,10 @@ while run:
   else:
     draw_text("Press SPACE to start", font, TEXT_COL, 160, 250)
 
+
+
+
+ 
 
     
   
