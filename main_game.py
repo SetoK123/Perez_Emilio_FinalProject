@@ -17,6 +17,7 @@ import pygame
 import button
 import random
 from random import randint
+import winsound
 
 
 pygame.init()
@@ -45,9 +46,15 @@ start_img = pygame.image.load("image/start.png").convert_alpha()
 setup_img = pygame.image.load("image/set_up.png").convert_alpha()
 quit_img = pygame.image.load("image/quit.png").convert_alpha()
 inst_img = pygame.image.load('image/instructions.png').convert_alpha()
-audio_img = pygame.image.load('images/button_audio.png').convert_alpha()
-keys_img = pygame.image.load('images/button_keys.png').convert_alpha()
 back_img = pygame.image.load('image/back.png').convert_alpha()
+back2_img = pygame.image.load('image/back.png').convert_alpha()
+homescreen_img = pygame.image.load('image/homescreen.png').convert_alpha()
+set_up1_img = pygame.image.load('image/setup1.png').convert_alpha()
+inst1_img = pygame.image.load('image/inst1.png').convert_alpha()
+
+# Creates sounds
+def play_downball():
+    winsound.PlaySound(os.path.join('sounds/downball.wav'), winsound.SND_ASYNC)
 
 
 #create button instances
@@ -55,9 +62,10 @@ start_button = button.Button(380, 100, start_img, 1)
 setup_button = button.Button(380, 240, setup_img, 1)
 quit_button = button.Button(380, 520, quit_img, 1)
 inst_button = button.Button(380, 380, inst_img, 1)
-keys_button = button.Button(246, 325, keys_img, 1)
 back_button = button.Button(332, 450, back_img, 1)
+back2_button = button.Button(0, 620, back_img, .7)
 
+# creats ball class
 class Ball(pygame.sprite.Sprite):
     def __init__(self, position):
         super().__init__()
@@ -70,20 +78,23 @@ def draw_text(text, font, text_col, x, y):
   screen.blit(img, (x, y))
 
 #images
-court = pygame.image.load("image/Tcourt.png")
+court = pygame.image.load("image/court2.png")
 ball1 = Ball((0,0))
 ball2 = Ball((0,0))
 
+# Creates the timer for the balls
 change_timer_ball1 = pygame.time.get_ticks()
-change_interval_ball1 = 1500
+# sets interval to 3sec
+change_interval_ball1 = 3000
 
 change_timer_ball2 = pygame.time.get_ticks()
-change_interval_ball2 = 700
+# sets interval to 1.5 sec
+change_interval_ball2 = 1500
 
 
 # list of where the ball can go
-set = [[200, 0], [470, 0], [800, 0]]
-spike = [[200, 400], [470, 600], [800, 400]]
+set = [[180, 0], [470, 0], [780, 0]]
+spike = [[180, 370], [470, 520], [780, 380]]
 # Picks one of the locations
 ball1_set = set[randint(0, 2)]
 downball = spike[randint(0, 2)]
@@ -94,17 +105,19 @@ show_ball2 = False
 
 def testing():
     global show_ball2
-
+# displays the court
     screen.blit(court, (0, 0))
+    # Displays the ball
     screen.blit(ball1.image, ball1_set)
-
-    if elapsed_time_ball1 >= 700:
-        if elapsed_time_ball2 < change_interval_ball2 / 2:
-            print("works for ball2")
+# Once it has been 1.5sec ball2 will be shown
+    if elapsed_time_ball2 >= 1500:
         show_ball2 = True
-
+        
+# shows ball2
     if show_ball2:
         screen.blit(ball2.image, downball)
+
+        
  
       
       
@@ -150,17 +163,22 @@ while run:
       #calls the game
       testing()
       
+      
         
       
       # check if it's time to change the ball's position
-      # if its been 3 seconds reset ball and ball2 position
+      # if its been 3 seconds reset ball1 and ball2 position
       if current_time - change_timer_ball1 >= change_interval_ball1:
             ball1_set = set[randint(0, 2)]
             downball = spike[randint(0, 2)]
             change_timer_ball1 = current_time
 
-            # Reset show_ball2 to False when ball1 changes positions
+            # Reset show_ball2 to False when ball1 changes positions, makes ball2 invisible 
             show_ball2 = False
+
+          #  spiking sound effect
+            if show_ball2 == False:
+               play_downball()
 
             # check if it's time to change the ball2's position
             if current_time - change_timer_ball2 >= change_interval_ball2:
@@ -169,28 +187,28 @@ while run:
 
      
 
-      if back_button.draw(screen):
+      if back2_button.draw(screen):
         menu_state = "main"
       
 
 #check if the options menu is open
     if menu_state == "setup":
       #draw the different options buttons
-      if inst_button.draw(screen):
-        print("Video Settings")
-      if back_button.draw(screen):
+      screen.blit(set_up1_img, (0, 0))
+      if back2_button.draw(screen):
         menu_state = "main"
 
       # check for instruction menu state
     if menu_state == "inst":
       #draw the different options buttons
-      if inst_button.draw(screen):
-        print("Video Settings")
-      if back_button.draw(screen):
+      screen.blit(inst1_img, (0, 0))
+        
+      if back2_button.draw(screen):
         menu_state = "main"
 
   else:
-    draw_text("Press SPACE to start", font, TEXT_COL, 160, 250)
+    screen.blit(homescreen_img, (0, 0))
+    
 
 
 

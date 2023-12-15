@@ -1,5 +1,5 @@
 # This file was created by Emilio Perez
-from Settings import *
+
 import pygame as pg 
 import sys 
 
