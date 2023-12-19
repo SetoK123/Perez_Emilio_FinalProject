@@ -51,10 +51,25 @@ back2_img = pygame.image.load('image/back.png').convert_alpha()
 homescreen_img = pygame.image.load('image/homescreen.png').convert_alpha()
 set_up1_img = pygame.image.load('image/setup1.png').convert_alpha()
 inst1_img = pygame.image.load('image/inst1.png').convert_alpha()
+left_img = pygame.image.load('image/left.png').convert_alpha()
+right_img = pygame.image.load('image/right.png').convert_alpha()
+middle_img = pygame.image.load('image/middle.png').convert_alpha()
+choose_position_img = pygame.image.load('image/choos_position.png').convert_alpha()
+easy_img = pygame.image.load('image/easy.png').convert_alpha()
+medium_img = pygame.image.load('image/medium.png').convert_alpha()
+hard_img = pygame.image.load('image/hard.png').convert_alpha()
+choose_difficulty_img = pygame.image.load('image/pick_difficulty.png').convert_alpha()
+
+
+
 
 # Creates sounds
 def play_downball():
     winsound.PlaySound(os.path.join('sounds/downball.wav'), winsound.SND_ASYNC)
+def play_music():
+    winsound.PlaySound(os.path.join('sounds/m.wav'), winsound.SND_ASYNC)
+def play_crowd():
+    winsound.PlaySound(os.path.join('sounds/crowd.wav'), winsound.SND_ASYNC)
 
 
 #create button instances
@@ -63,7 +78,13 @@ setup_button = button.Button(380, 240, setup_img, 1)
 quit_button = button.Button(380, 520, quit_img, 1)
 inst_button = button.Button(380, 380, inst_img, 1)
 back_button = button.Button(332, 450, back_img, 1)
-back2_button = button.Button(0, 620, back_img, .7)
+back2_button = button.Button(0, 630, back_img, .7)
+right_button = button.Button(680, 300, right_img, 1)
+middle_button = button.Button(380, 450, middle_img, 1)
+left_button = button.Button(90, 300, left_img, 1)
+easy_button = button.Button(380, 200, easy_img, 1)
+medium_button = button.Button(380, 340, medium_img, 1)
+hard_button = button.Button(380, 480, hard_img, 1)
 
 # creats ball class
 class Ball(pygame.sprite.Sprite):
@@ -120,13 +141,6 @@ def testing():
         
  
       
-      
-      
-      
-    
-
-
-    
 
 
 
@@ -136,8 +150,9 @@ current_time = pygame.time.get_ticks()
 #game loop
 run = True
 clock = pygame.time.Clock()
-while run:
 
+while run:
+  
   current_time = pygame.time.get_ticks()
   elapsed_time_ball1 = current_time - change_timer_ball1
   elapsed_time_ball2 = current_time - change_timer_ball2
@@ -146,6 +161,7 @@ while run:
 
 #check if game is paused
   if game_open == True:
+        
     #check menu state
     if menu_state == "main":
       #draw pause screen buttons
@@ -157,14 +173,59 @@ while run:
         menu_state = "inst"
       if quit_button.draw(screen):
         run = False
+
+       
          
 # check for start menu state
+    # if menu_state == "start":
+     
+      
+
+#check if the options menu is open
+    if menu_state == "setup":
+      #draw the different options buttons
+      screen.blit(set_up1_img, (0, 0))
+      if back2_button.draw(screen):
+        menu_state = "main"
+
+      # check for instruction menu state
+    if menu_state == "inst":
+      #draw the different options buttons
+      screen.blit(inst1_img, (0, 0))
+
     if menu_state == "start":
-      #calls the game
+      #draw the different options buttons
+      screen.blit(choose_position_img, (0, 0))
+      if right_button.draw(screen):
+        menu_state = "right"
+      if middle_button.draw(screen):
+            menu_state = "middle"
+      if left_button.draw(screen):
+            menu_state = "left"
+
+      if back2_button.draw(screen):
+            menu_state = "main"
+
+
+
+
+    if menu_state == "right":
+      #draw the different options buttons
+      screen.blit(choose_difficulty_img, (0, 0))
+      if easy_button.draw(screen):
+        menu_state = "r_easy"
+
+      if medium_button.draw(screen):
+            menu_state = "r_medium"
+
+      if hard_button.draw(screen):
+            menu_state = "r_hard"
+
+      if back2_button.draw(screen):
+            menu_state = "main"
+
+    if menu_state == "r_easy":
       testing()
-      
-      
-        
       
       # check if it's time to change the ball's position
       # if its been 3 seconds reset ball1 and ball2 position
@@ -179,32 +240,273 @@ while run:
           #  spiking sound effect
             if show_ball2 == False:
                play_downball()
+               
+               
 
             # check if it's time to change the ball2's position
             if current_time - change_timer_ball2 >= change_interval_ball2:
                 change_timer_ball2 = current_time
 
 
-     
-
       if back2_button.draw(screen):
-        menu_state = "main"
+            menu_state = "main"
+    
+    if menu_state == "r_medium":
+    
+      testing()
       
+      # check if it's time to change the ball's position
+      # if its been 3 seconds reset ball1 and ball2 position
+      if current_time - change_timer_ball1 >= change_interval_ball1:
+            ball1_set = set[randint(0, 2)]
+            downball = spike[randint(0, 2)]
+            change_timer_ball1 = current_time
 
-#check if the options menu is open
-    if menu_state == "setup":
-      #draw the different options buttons
-      screen.blit(set_up1_img, (0, 0))
-      if back2_button.draw(screen):
-        menu_state = "main"
+            # Reset show_ball2 to False when ball1 changes positions, makes ball2 invisible 
+            show_ball2 = False
 
-      # check for instruction menu state
-    if menu_state == "inst":
-      #draw the different options buttons
-      screen.blit(inst1_img, (0, 0))
-        
+          #  spiking sound effect
+            if show_ball2 == False:
+               play_downball()
+               
+
+            # check if it's time to change the ball2's position
+            if current_time - change_timer_ball2 >= change_interval_ball2:
+                change_timer_ball2 = current_time
+
+
       if back2_button.draw(screen):
-        menu_state = "main"
+            menu_state = "main"
+
+    if menu_state == "r_hard":
+    
+      testing()
+      
+      # check if it's time to change the ball's position
+      # if its been 3 seconds reset ball1 and ball2 position
+      if current_time - change_timer_ball1 >= change_interval_ball1:
+            ball1_set = set[randint(0, 2)]
+            downball = spike[randint(0, 2)]
+            change_timer_ball1 = current_time
+
+            # Reset show_ball2 to False when ball1 changes positions, makes ball2 invisible 
+            show_ball2 = False
+
+          #  spiking sound effect
+            if show_ball2 == False:
+               play_downball()
+               
+
+            # check if it's time to change the ball2's position
+            if current_time - change_timer_ball2 >= change_interval_ball2:
+                change_timer_ball2 = current_time
+
+
+      if back2_button.draw(screen):
+            menu_state = "main"
+
+
+
+
+
+    if menu_state == "middle":
+      #draw the different options buttons
+      screen.blit(choose_difficulty_img, (0, 0))
+      if easy_button.draw(screen):
+        menu_state = "m_easy"
+      if medium_button.draw(screen):
+            menu_state = "m_medium"
+      if hard_button.draw(screen):
+            menu_state = "m_hard"
+
+      if back2_button.draw(screen):
+            menu_state = "main"
+
+
+    if menu_state == "m_easy":
+     
+      testing()
+      
+      # check if it's time to change the ball's position
+      # if its been 3 seconds reset ball1 and ball2 position
+      if current_time - change_timer_ball1 >= change_interval_ball1:
+            ball1_set = set[randint(0, 2)]
+            downball = spike[randint(0, 2)]
+            change_timer_ball1 = current_time
+
+            # Reset show_ball2 to False when ball1 changes positions, makes ball2 invisible 
+            show_ball2 = False
+
+          #  spiking sound effect
+            if show_ball2 == False:
+               play_downball()
+              
+
+            # check if it's time to change the ball2's position
+            if current_time - change_timer_ball2 >= change_interval_ball2:
+                change_timer_ball2 = current_time
+
+
+      if back2_button.draw(screen):
+            menu_state = "main"
+    
+    if menu_state == "m_medium":
+      
+      testing()
+      
+      # check if it's time to change the ball's position
+      # if its been 3 seconds reset ball1 and ball2 position
+      if current_time - change_timer_ball1 >= change_interval_ball1:
+            ball1_set = set[randint(0, 2)]
+            downball = spike[randint(0, 2)]
+            change_timer_ball1 = current_time
+
+            # Reset show_ball2 to False when ball1 changes positions, makes ball2 invisible 
+            show_ball2 = False
+
+          #  spiking sound effect
+            if show_ball2 == False:
+               play_downball()
+             
+            # check if it's time to change the ball2's position
+            if current_time - change_timer_ball2 >= change_interval_ball2:
+                change_timer_ball2 = current_time
+
+
+      if back2_button.draw(screen):
+            menu_state = "main"
+
+    if menu_state == "m_hard":
+      
+      testing()
+      
+      # check if it's time to change the ball's position
+      # if its been 3 seconds reset ball1 and ball2 position
+      if current_time - change_timer_ball1 >= change_interval_ball1:
+            ball1_set = set[randint(0, 2)]
+            downball = spike[randint(0, 2)]
+            change_timer_ball1 = current_time
+
+            # Reset show_ball2 to False when ball1 changes positions, makes ball2 invisible 
+            show_ball2 = False
+
+          #  spiking sound effect
+            if show_ball2 == False:
+               play_downball()
+         
+
+            # check if it's time to change the ball2's position
+            if current_time - change_timer_ball2 >= change_interval_ball2:
+                change_timer_ball2 = current_time
+
+
+      if back2_button.draw(screen):
+            menu_state = "main"
+
+
+
+
+
+
+     
+    
+
+    if menu_state == "left":
+      #draw the different options buttons
+      screen.blit(choose_difficulty_img, (0, 0))
+      if easy_button.draw(screen):
+        menu_state = "l_easy"
+      if medium_button.draw(screen):
+            menu_state = "l_medium"
+      if hard_button.draw(screen):
+            menu_state = "l_hard"
+
+      if back2_button.draw(screen):
+            menu_state = "main"
+    
+    if menu_state == "l_easy":
+      
+      testing()
+      
+      # check if it's time to change the ball's position
+      # if its been 3 seconds reset ball1 and ball2 position
+      if current_time - change_timer_ball1 >= change_interval_ball1:
+            ball1_set = set[randint(0, 2)]
+            downball = spike[randint(0, 2)]
+            change_timer_ball1 = current_time
+
+            # Reset show_ball2 to False when ball1 changes positions, makes ball2 invisible 
+            show_ball2 = False
+
+          #  spiking sound effect
+            if show_ball2 == False:
+               play_downball()
+               
+
+            # check if it's time to change the ball2's position
+            if current_time - change_timer_ball2 >= change_interval_ball2:
+                change_timer_ball2 = current_time
+
+
+      if back2_button.draw(screen):
+            menu_state = "main"
+    
+    if menu_state == "l_medium":
+     
+      testing()
+      
+      # check if it's time to change the ball's position
+      # if its been 3 seconds reset ball1 and ball2 position
+      if current_time - change_timer_ball1 >= change_interval_ball1:
+            ball1_set = set[randint(0, 2)]
+            downball = spike[randint(0, 2)]
+            change_timer_ball1 = current_time
+
+            # Reset show_ball2 to False when ball1 changes positions, makes ball2 invisible 
+            show_ball2 = False
+
+          #  spiking sound effect
+            if show_ball2 == False:
+               play_downball()
+               
+
+            # check if it's time to change the ball2's position
+            if current_time - change_timer_ball2 >= change_interval_ball2:
+                change_timer_ball2 = current_time
+
+
+      if back2_button.draw(screen):
+            menu_state = "main"
+
+    if menu_state == "l_hard":
+      
+      testing()
+      
+      # check if it's time to change the ball's position
+      # if its been 3 seconds reset ball1 and ball2 position
+      if current_time - change_timer_ball1 >= change_interval_ball1:
+            ball1_set = set[randint(0, 2)]
+            downball = spike[randint(0, 2)]
+            change_timer_ball1 = current_time
+
+            # Reset show_ball2 to False when ball1 changes positions, makes ball2 invisible 
+            show_ball2 = False
+
+          #  spiking sound effect
+            if show_ball2 == False:
+               play_downball()
+               
+
+            # check if it's time to change the ball2's position
+            if current_time - change_timer_ball2 >= change_interval_ball2:
+                change_timer_ball2 = current_time
+
+
+      if back2_button.draw(screen):
+            menu_state = "main"
+
+
+
 
   else:
     screen.blit(homescreen_img, (0, 0))
@@ -225,6 +527,8 @@ while run:
     if event.type == pygame.KEYDOWN:
       if event.key == pygame.K_SPACE:
         game_open = True
+        if game_open == True:
+            play_music()
     if event.type == pygame.QUIT:
       run = False
 
